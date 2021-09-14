@@ -1,0 +1,3 @@
+exp		mode		iter		loss
+try10ss		train		95000		9.75609
+try10ss		val		290000		41.52497
