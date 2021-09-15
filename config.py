@@ -27,7 +27,7 @@ class Config:
         self._configs["use_crop"]          = False
         self._configs["curve_predictor"]   = False
         self._configs["differ_rr"]         = False
-        self._configs["activation"]        = "smooth_l1"
+        self._configs["activation"]        = "ce"
 
 
         # Directories
