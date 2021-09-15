@@ -113,7 +113,7 @@ class SetCriterion(nn.Module):
         """
         assert 'rr' in outputs
         idx = self._get_src_permutation_idx(indices)
-        # 计算CE自带sigmoid
+        # 计算CE时自带sigmoid
         if not system_configs.activation == "ce":
             outputs['rr'] = F.sigmoid(outputs['rr'])
         scr_rr = outputs['rr'][idx]
