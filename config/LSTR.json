@@ -21,6 +21,7 @@
         "rr_weight": 0,
         "aux_rr": false,
         "aux_loss": true,
+        "activation": "ce",
         "max_iter": 500000,
         "stepsize": 450000,
         "snapshot": 5000,

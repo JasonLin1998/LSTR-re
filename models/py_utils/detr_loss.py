@@ -113,7 +113,8 @@ class SetCriterion(nn.Module):
         """
         assert 'rr' in outputs
         idx = self._get_src_permutation_idx(indices)
-        outputs['rr'] = F.sigmoid(outputs['rr'])
+        if not system_configs.activation == "ce":
+            outputs['rr'] = F.sigmoid(outputs['rr'])
         scr_rr = outputs['rr'][idx]
         target_rr = torch.cat([tgt[i] for tgt, (_, i) in zip(rr, indices)], dim=0).cuda()
         if system_configs.differ_rr:
@@ -125,7 +126,15 @@ class SetCriterion(nn.Module):
             loss_rr_curve = (F.smooth_l1_loss(scr_rr.squeeze(dim=1)[curve_index], target_rr[curve_index]))*curve_num
             loss_rr_all = (loss_rr_straight + 0.5 * loss_rr_curve)/(straight_num + curve_num)
         else:
-            loss_rr_all = F.smooth_l1_loss(scr_rr.squeeze(dim=1), target_rr)
+            if system_configs.activation == "smooth_l1":
+                loss_rr_all = F.smooth_l1_loss(scr_rr.squeeze(dim=1), target_rr)
+            elif system_configs.activation == "ce":
+                loss_rr_all = F.cross_entropy(scr_rr.squeeze(dim=1), target_rr)
+            elif system_configs.activation == "l1":
+                loss_rr_all = F.l1_loss(scr_rr.squeeze(dim=1), target_rr)
+            else:
+                loss_rr_all = F.mse_loss(scr_rr.squeeze(dim=1), target_rr)
+
         losses = {}
         losses['loss_rr'] = loss_rr_all
 
